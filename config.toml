@@ -1,0 +1,4 @@
+baseURL = "https://arthurkauffman.com/"
+languageCode = "en-us"
+title = "Arthur Kauffman"
+theme = "noteworthy"

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Arthur Kauffman</title>
+    <link>https://arthurkauffman.com/posts/</link>
+    <description>Recent content in Posts on Arthur Kauffman</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 15 Mar 2020 11:59:00 -0400</lastBuildDate>
+    
+	<atom:link href="https://arthurkauffman.com/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>i use Arch, btw</title>
+      <link>https://arthurkauffman.com/posts/arch-install-notes/</link>
+      <pubDate>Sun, 15 Mar 2020 11:59:00 -0400</pubDate>
+      
+      <guid>https://arthurkauffman.com/posts/arch-install-notes/</guid>
+      <description>Yesterday my Pop OS install got borked and instead of fixing it, since I&amp;rsquo;m bored at home and self-quarantined anyway, decided to try installing Arch Linux. First time, and how hard could it be anyway?
+Got it done finally, and learned a lot along the way. Here are some notes to speed it up next time.
+  Boot into my Windows partition, download the Arch ISO, use Rufus to make a bootable drive, and boot into Arch.</description>
+    </item>
+    
+  </channel>
+</rss>
