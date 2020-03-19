@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+
+<html lang="en-us">
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="format-detection" content="telephone=no"/>
+
+    <title>Arthur Kauffman</title>
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#FF3DB4">
+    <meta name="theme-color" content="#ffffff">
+
+    
+    
+    
+    <link rel="stylesheet" href="https://arthurkauffman.com/css/main.min.03322cbe6bddfc28e7b17b84bc5446282a510b14b57be3371ba1f68ef1ab9ce8.css"/>
+
+    
+    
+    
+
+    
+    
+ 
+    
+    
+</head>
+    <body>
+        
+<nav>
+  <header>
+    <div class="site-title">
+        <a href="/">Arthur Kauffman</a>
+    </div>  
+</header>
+  <div class="nav-menu">
+  
+  <a class="color-link nav-link" href="https://arthurkauffman.com/index.xml" target="_blank" rel="noopener" type="application/rss+xml">RSS</a>
+</div>
+<footer class="footer">
+	<div class="social-icons">
+        
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+</div>
+
+
+
+
+
+	<script src="https://arthurkauffman.com/js/main.min.fa5c2b23e07b5d9bfad267a52b4b24fdb053e6fb7524993383594926a3ac270c.js" integrity="sha256-+lwrI+B7XZv60melK0sk/bBT5vt1JJkzg1lJJqOsJww="></script>
+</footer>
+
+</nav>
+        <div id="content" class="content-container">
+        
+<h1 class="post-title">Javascript Arrow Functions, Parentheses, Curly Braces and Other Nonsense</h1>
+    
+    <time>March 19, 2020</time>
+    
+    <div>
+        <p>
+        <p>Javascript is funky. Wrapping my head around nested functions feels a little
+nuts after learning a language like Ruby.</p>
+<p>Complicating it even more is the shift from ES5 to ES6, where ES5 always used
+the <code>function</code> keyword and ES6 includes fancy new <code>arrow functions</code>.</p>
+<p>Big difference, besides less typing of the word &lsquo;function&rsquo;? Implicit return.
+Arrow functions, declared with a weird arrow rocket (<code>=&gt;</code>), can implicitly return
+their value when the function is called. This means writing a <code>return</code> statement
+is no longer necessary if your function contains only a single expression.</p>
+<p>But what does this look like in actual code? Take a look at this simple function
+to add together all the digits of a number and return a number:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">sum</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">integer</span>) {
+  <span style="color:#66d9ef">return</span> (
+    String(<span style="color:#a6e22e">integer</span>).<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#39;&#39;</span>).<span style="color:#a6e22e">reduce</span>(
+      <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">accumulator</span>, <span style="color:#a6e22e">value</span>) {
+        <span style="color:#66d9ef">return</span> Number(<span style="color:#a6e22e">accumulator</span>) <span style="color:#f92672">+</span> Number(<span style="color:#a6e22e">value</span>);
+      }
+    )
+  );
+};
+</code></pre></div><p>Code here is pretty straightforward: the variable <code>sum</code> is assigned to a
+function which converts the integer to a string, splits it into an array, and
+then calls the <code>reduce</code> method. The <code>reduce</code> method executes a function that
+converts the string digits to numbers and then returns a single reduced value,
+the sum of the digits.</p>
+<p>OK, so let&rsquo;s give this a shot using arrow functions.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sum</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">integer</span>) =&gt; {
+  <span style="color:#66d9ef">return</span> (
+    String(<span style="color:#a6e22e">integer</span>).<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#39;&#39;</span>).<span style="color:#a6e22e">reduce</span>(
+      (<span style="color:#a6e22e">accumulator</span>, <span style="color:#a6e22e">value</span>) =&gt; {
+        <span style="color:#66d9ef">return</span> Number(<span style="color:#a6e22e">accumulator</span>) <span style="color:#f92672">+</span> Number(<span style="color:#a6e22e">value</span>);
+      }
+    )
+  );
+};
+</code></pre></div><p>Looking good. We replaced the outdated and sometimes dangerous <code>var</code> with
+<code>const</code> and we took out the <code>function</code> declarations.</p>
+<p>But! We can also take out the implicit <code>return</code> statements because in the case
+of the function being executed for the <code>reduce</code> method and the function
+returning our sum, there is only one expression being returned.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sum</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">integer</span>) =&gt; {
+  (
+    String(<span style="color:#a6e22e">integer</span>).<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#39;&#39;</span>).<span style="color:#a6e22e">reduce</span>(
+      (<span style="color:#a6e22e">accumulator</span>, <span style="color:#a6e22e">value</span>) =&gt; {
+        Number(<span style="color:#a6e22e">accumulator</span>) <span style="color:#f92672">+</span> Number(<span style="color:#a6e22e">value</span>);
+      }
+    )
+  );
+};
+</code></pre></div><p>At this point though, our code simply returns <code>undefined</code>. Why is that?</p>
+<p>It&rsquo;s because if Javascript sees curly braces, it is expecting multiple
+expressions and thus needs an explicit <code>return</code> statement. Implicit return only
+works with no curly braces.</p>
+<p>So lets take them out!</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sum</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">integer</span>) =&gt; 
+  (
+    String(<span style="color:#a6e22e">integer</span>).<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#39;&#39;</span>).<span style="color:#a6e22e">reduce</span>(
+      (<span style="color:#a6e22e">accumulator</span>, <span style="color:#a6e22e">value</span>) =&gt; 
+        Number(<span style="color:#a6e22e">accumulator</span>) <span style="color:#f92672">+</span> Number(<span style="color:#a6e22e">value</span>);
+    )
+  );
+;
+</code></pre></div><p>That didn&rsquo;t work at all. If you try to run this code, you will get at least
+three syntax errors, complaining about missing/unexpected parentheses.</p>
+<p>Basically, Javascript is expecting an implicit return to all be on one line. The
+semicolons that are still in our code are suggesting some kind of multi-line
+thing going on. What if we take them all out, except for the one at the end?</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sum</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">integer</span>) =&gt; 
+  (
+    String(<span style="color:#a6e22e">integer</span>).<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#39;&#39;</span>).<span style="color:#a6e22e">reduce</span>(
+      (<span style="color:#a6e22e">accumulator</span>, <span style="color:#a6e22e">value</span>) =&gt; 
+        Number(<span style="color:#a6e22e">accumulator</span>) <span style="color:#f92672">+</span> Number(<span style="color:#a6e22e">value</span>)
+    )
+  )
+;
+</code></pre></div><p>Tada! Finally we have usable code again. Let&rsquo;s refactor just slightly by moving
+some stuff onto the same lines:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sum</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">integer</span>) =&gt; (
+  String(<span style="color:#a6e22e">integer</span>).<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#39;&#39;</span>).<span style="color:#a6e22e">reduce</span>((<span style="color:#a6e22e">accumulator</span>, <span style="color:#a6e22e">value</span>) =&gt; 
+      Number(<span style="color:#a6e22e">accumulator</span>) <span style="color:#f92672">+</span> Number(<span style="color:#a6e22e">value</span>)
+  )
+);
+</code></pre></div><p>And that&rsquo;s looking much better. If we don&rsquo;t care about long lines of code, we
+can even make this an actual one-line expresion by taking out some of these
+parentheses&hellip;</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sum</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">integer</span>) =&gt; String(<span style="color:#a6e22e">integer</span>).<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#39;&#39;</span>).<span style="color:#a6e22e">reduce</span>((<span style="color:#a6e22e">accumulator</span>, <span style="color:#a6e22e">value</span>) =&gt; Number(<span style="color:#a6e22e">accumulator</span>) <span style="color:#f92672">+</span> Number(<span style="color:#a6e22e">value</span>));
+</code></pre></div><h3 id="recap">Recap</h3>
+<p>To recap:</p>
+<ul>
+<li>arrow functions can have an implicit return if you have a single expression in
+your function</li>
+<li>implicit returns <em>can not</em> use curly braces</li>
+<li>code inside parentheses is basically one line of code, and can&rsquo;t have
+semi-colons until the end</li>
+</ul>
+
+        </p>
+    </div>
+    
+
+    <div class="page-footer">
+        
+    </div>
+
+
+        
+        </div>
+        <footer class="footer-mobile">
+	<div class="social-icons">
+        
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+</div>
+
+
+
+
+
+	<script src="https://arthurkauffman.com/js/main.min.fa5c2b23e07b5d9bfad267a52b4b24fdb053e6fb7524993383594926a3ac270c.js" integrity="sha256-+lwrI+B7XZv60melK0sk/bBT5vt1JJkzg1lJJqOsJww="></script>
+</footer>
+
+    </body>
+</html>

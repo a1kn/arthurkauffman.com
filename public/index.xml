@@ -6,10 +6,21 @@
     <description>Recent content on Arthur Kauffman</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 15 Mar 2020 11:59:00 -0400</lastBuildDate>
+    <lastBuildDate>Thu, 19 Mar 2020 12:21:01 -0400</lastBuildDate>
     
 	<atom:link href="https://arthurkauffman.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Javascript Arrow Functions, Parentheses, Curly Braces and Other Nonsense</title>
+      <link>https://arthurkauffman.com/posts/javascript-arrow-functions-parentheses-curly-braces/</link>
+      <pubDate>Thu, 19 Mar 2020 12:21:01 -0400</pubDate>
+      
+      <guid>https://arthurkauffman.com/posts/javascript-arrow-functions-parentheses-curly-braces/</guid>
+      <description>Javascript is funky. Wrapping my head around nested functions feels a little nuts after learning a language like Ruby.
+Complicating it even more is the shift from ES5 to ES6, where ES5 always used the function keyword and ES6 includes fancy new arrow functions.
+Big difference, besides less typing of the word &amp;lsquo;function&amp;rsquo;? Implicit return. Arrow functions, declared with a weird arrow rocket (=&amp;gt;), can implicitly return their value when the function is called.</description>
+    </item>
     
     <item>
       <title>i use Arch, btw</title>
