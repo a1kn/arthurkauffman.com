@@ -1,5 +1,5 @@
 ---
-title: "i use Arch, btw"
+title: "Arch Install Notes"
 date: 2020-03-15T11:59:00-04:00
 draft: false 
 ---

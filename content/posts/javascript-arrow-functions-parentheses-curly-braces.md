@@ -111,9 +111,9 @@ some stuff onto the same lines:
 
 ```javascript
 const sum = (integer) => (
-  String(integer).split('').reduce((accumulator, value) => 
-      Number(accumulator) + Number(value)
-  )
+  String(integer).split('').reduce((accumulator, value) => (
+    Number(accumulator) + Number(value)
+  ))
 );
 ```
 
