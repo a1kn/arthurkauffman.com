@@ -12,6 +12,15 @@
     
     
     <item>
+      <title>Object-Oriented Javascript Methods: Comparing Pseudo-Classical, OLOO, and the 2015 Class Syntax</title>
+      <link>https://arthurkauffman.com/posts/js-oop-pseudo-classical-vs-oloo/</link>
+      <pubDate>Sun, 19 Apr 2020 17:04:40 -0400</pubDate>
+      
+      <guid>https://arthurkauffman.com/posts/js-oop-pseudo-classical-vs-oloo/</guid>
+      <description>Javascript&amp;rsquo;s prototypal inheritance is simple; so simple, in fact, that it seems at time overly-complicated. But at it&amp;rsquo;s heart, JS has only one construct &amp;ndash; objects.</description>
+    </item>
+    
+    <item>
       <title>About</title>
       <link>https://arthurkauffman.com/about/</link>
       <pubDate>Sat, 28 Mar 2020 00:00:00 +0000</pubDate>

@@ -6,10 +6,19 @@
     <description>Recent content in Posts on Arthur Kauffman</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 19 Mar 2020 12:21:01 -0400</lastBuildDate>
+    <lastBuildDate>Sun, 19 Apr 2020 17:04:40 -0400</lastBuildDate>
     
 	<atom:link href="https://arthurkauffman.com/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Object-Oriented Javascript Methods: Comparing Pseudo-Classical, OLOO, and the 2015 Class Syntax</title>
+      <link>https://arthurkauffman.com/posts/js-oop-pseudo-classical-vs-oloo/</link>
+      <pubDate>Sun, 19 Apr 2020 17:04:40 -0400</pubDate>
+      
+      <guid>https://arthurkauffman.com/posts/js-oop-pseudo-classical-vs-oloo/</guid>
+      <description>Javascript&amp;rsquo;s prototypal inheritance is simple; so simple, in fact, that it seems at time overly-complicated. But at it&amp;rsquo;s heart, JS has only one construct &amp;ndash; objects.</description>
+    </item>
     
     <item>
       <title>Javascript Arrow Functions, Parentheses, Curly Braces and Other Nonsense</title>
