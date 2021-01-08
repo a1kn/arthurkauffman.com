@@ -137,7 +137,161 @@
                     Object-Oriented Javascript Methods: Comparing Pseudo-Classical, OLOO, and the 2015 Class Syntax
                 </a>
             </h2>
-            <div><p>Javascript&rsquo;s prototypal inheritance is simple; so simple, in fact, that it seems at time overly-complicated. But at it&rsquo;s heart, JS has only one construct &ndash; objects.</p></div>
+            <div><p>
+              <p>Javascript&rsquo;s prototypal inheritance is simple; so simple, in fact, that it seems
+at time overly-complicated. But at it&rsquo;s heart, JS has only one construct &ndash;
+objects. Objects can be linked with other objects in a prototype chain.</p>
+<p>The focus of this article is not to go into detail about the exact
+implementation of JS&rsquo;s OOP. MDN&rsquo;s stellar documentation, as always, provides
+in-depth and easily parsed documentation. If you&rsquo;re trying to wrap your head
+around JS&rsquo;s OOP implementation, start with <a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Object-oriented_JS">MDN&rsquo;s Object-oriented JavaScript for
+beginners</a>
+and when you&rsquo;re ready, make sure to read <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Inheritance_and_the_prototype_chain">Inheritance and the prototype
+chain</a>.</p>
+<p>I also won&rsquo;t go into depth about <em>all</em> the ways in which JS OOP might be
+implemented in the wild. <a href="https://john-dugan.com/object-oriented-javascript-pattern-comparison/">John
+Dugan</a>
+does a stellar job of taking us through a myriad of approaches.</p>
+<p>Instead, I&rsquo;m comparing two approaches that many agree are best-practice: the
+pseudo-classical model, and Kyle Simpson&rsquo;s OLOO model. I&rsquo;ll show examples of the
+classical model using more conventional code, and the updated 2015 syntax using
+<code>class</code>.</p>
+<p>First up, let&rsquo;s look at the most common implementation of JS&rsquo;s OOP, the
+so-called pseudo-classical model, which looks similar in syntax to many
+classical approaches to OOP, such as those found in Ruby, Python, and Java.</p>
+<h3 id="pseudo-classical-example">Pseudo-Classical Example:</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">Animal</span>(<span style="color:#a6e22e">name</span>) {
+  <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">name</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">name</span>;
+}
+<span style="color:#75715e">// constructor function is defined
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">Dog</span>(<span style="color:#a6e22e">name</span>) {
+  <span style="color:#a6e22e">Animal</span>.<span style="color:#a6e22e">call</span>(<span style="color:#66d9ef">this</span>, <span style="color:#a6e22e">name</span>);
+}
+<span style="color:#75715e">// a second constructor function is defined, utilizing `call` to call the
+</span><span style="color:#75715e">// `Animal` function with `this` and `name` argument
+</span><span style="color:#75715e"></span>
+<span style="color:#a6e22e">Dog</span>.<span style="color:#a6e22e">prototype</span> <span style="color:#f92672">=</span> Object.<span style="color:#a6e22e">create</span>(<span style="color:#a6e22e">Animal</span>.<span style="color:#a6e22e">prototype</span>);
+<span style="color:#75715e">// `Dog` prototype is set to be a copy of `Animal` prototype
+</span><span style="color:#75715e"></span>
+<span style="color:#a6e22e">Dog</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">constructor</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">Dog</span>;
+<span style="color:#75715e">// fix the constructor, so that objects created from `Dog` will correctly show
+</span><span style="color:#75715e">// `Dog` as the constructor
+</span><span style="color:#75715e"></span>
+<span style="color:#a6e22e">Dog</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">barks</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>() {
+  <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">`</span><span style="color:#e6db74">${</span><span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">name</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> barks!`</span>);
+}
+<span style="color:#75715e">// Add a `bark` method to the `Dog` prototype
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sparky</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Dog</span>(<span style="color:#e6db74">&#39;Sparky&#39;</span>);
+<span style="color:#a6e22e">sparky</span>.<span style="color:#a6e22e">bark</span>();
+</code></pre></div><h4 id="advantages">Advantages:</h4>
+<ul>
+<li><code>constructor</code> works and can be checked by calling <code>sparky.constructor</code> which
+will return <code>Dog</code>.</li>
+<li>clear to see what&rsquo;s happening in the code: two constructor functions are
+declared, and then one&rsquo;s prototype is set to the other&rsquo;s, which sets up a link
+in the prototype chain</li>
+</ul>
+<h4 id="disadvantages">Disadvantages:</h4>
+<ul>
+<li>can be hard to read, especially if program gets larger</li>
+<li>could be argued that the implementation of constructor functions and then
+objects being created from those functions is needlessly complex</li>
+</ul>
+<h3 id="example-using-2015s-class-syntax">Example Using 2015&rsquo;s Class Syntax:</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Animal</span> {
+  <span style="color:#a6e22e">constructor</span>(<span style="color:#a6e22e">name</span>) {
+    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">name</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">name</span>;
+  }
+}
+<span style="color:#75715e">// constructor function defined
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Dog</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">Animal</span> {
+  <span style="color:#a6e22e">constructor</span>(<span style="color:#a6e22e">name</span>) {
+    <span style="color:#66d9ef">super</span>(<span style="color:#a6e22e">name</span>);
+  }
+
+  <span style="color:#a6e22e">barks</span>() {
+    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">`</span><span style="color:#e6db74">${</span><span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">name</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> barks!`</span>);
+  }
+}
+<span style="color:#75715e">// a second constructor function defined, using `super` to pass arguments to the
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">first</span> <span style="color:#a6e22e">constructor</span> <span style="color:#66d9ef">function</span>, <span style="color:#a6e22e">and</span> <span style="color:#a6e22e">implementing</span> <span style="color:#a6e22e">the</span> <span style="color:#e6db74">`bark`</span> <span style="color:#a6e22e">method</span>
+
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sparky</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Dog</span>(<span style="color:#e6db74">&#39;Sparky&#39;</span>);
+<span style="color:#a6e22e">sparky</span>.<span style="color:#a6e22e">barks</span>();
+</code></pre></div><h4 id="advantages-1">Advantages:</h4>
+<ul>
+<li>has all the functionality of the first example, including <code>constructor</code> and
+proper prototype chaining</li>
+<li>easy to read and write. Wowzers, no need to fiddle with prototypes or
+constructors!</li>
+<li><code>super</code> replaces the need for <code>call</code></li>
+</ul>
+<h4 id="disadvantages-1">Disadvantages:</h4>
+<ul>
+<li>un-JS-like syntax; under the hood, all the same prototype stuff is going on,
+but it <em>feels</em> very un-Javascript-ey</li>
+<li>new syntax, so not supported in IE 11 and earlier</li>
+<li>has the same problem with complexity as the first example, constructor
+functions need to be declared in order to instantiate objects</li>
+</ul>
+<h3 id="oloo-objects-linked-to-other-objects-example">OLOO (Objects Linked to Other Objects) Example:</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">Animal</span> <span style="color:#f92672">=</span> {
+  <span style="color:#a6e22e">init</span>(<span style="color:#a6e22e">name</span>) {
+    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">name</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">name</span>;
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>;
+  },
+};
+<span style="color:#75715e">// notice this is an object, and not a function
+</span><span style="color:#75715e">// also notice the `init` method, which sets initial values
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">Dog</span> <span style="color:#f92672">=</span> Object.<span style="color:#a6e22e">create</span>(<span style="color:#a6e22e">Animal</span>);
+<span style="color:#75715e">// creating an object from the first object, which establishes a link in the
+</span><span style="color:#75715e">// prototype chain
+</span><span style="color:#75715e"></span>
+<span style="color:#a6e22e">Dog</span>.<span style="color:#a6e22e">bark</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>() {
+  <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">`</span><span style="color:#e6db74">${</span><span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">name</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> barks!`</span>);
+};
+<span style="color:#75715e">// add a method to the `Dog` object
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sparky</span> <span style="color:#f92672">=</span> Object.<span style="color:#a6e22e">create</span>(<span style="color:#a6e22e">Dog</span>).<span style="color:#a6e22e">init</span>(<span style="color:#e6db74">&#39;Sparky&#39;</span>);
+<span style="color:#75715e">// creates a new object from `Dog` and passes in the name `Sparky`
+</span><span style="color:#75715e"></span>
+<span style="color:#a6e22e">sparky</span>.<span style="color:#a6e22e">bark</span>();
+</code></pre></div><h4 id="advantages-2">Advantages:</h4>
+<ul>
+<li>no constructor functions necessary</li>
+<li>no need to worry about <code>call</code></li>
+<li>greatly simplified code</li>
+</ul>
+<h4 id="disadvantages-2">Disadvantages:</h4>
+<ul>
+<li>can be hard to read/understand for someone coming from another language</li>
+<li>doesn&rsquo;t <a href="https://frontendmasters.com/courses/advanced-javascript/oloo-questions/">care about</a>
+<code>constructor</code>, so <code>sparky.constructor</code> actually returns
+<code>Object</code></li>
+</ul>
+<h2 id="summary">Summary</h2>
+<ul>
+<li>Javascript&rsquo;s prototypal nature brings great flexibility into the way new
+objects are instantiated, which means that there are numerous approaches to JS
+OOP</li>
+<li>Pseudo-classical model uses constructor functions and the <code>new</code> keyword to
+instantiate new objects that are linked in the prototype chain</li>
+<li>OLOO uses <code>Object.create</code> to create new objects from other objects and largely
+does away with the classical idea of hierarchal inheritance</li>
+</ul>
+<h2 id="recommendations">Recommendations</h2>
+<ul>
+<li>use OLOO as much as possible</li>
+<li>if you must use pseudo-classical, use <code>class</code> syntax if you don&rsquo;t care about
+IE 11 browser support, which is less of a worry with every passing year</li>
+<li>otherwise, use pseudo-classical</li>
+</ul>
+
+            </p></div>
             <div class="post-footer">
             <time>April 19, 2020</time>
 
@@ -153,8 +307,103 @@
                     Javascript Arrow Functions, Parentheses, Curly Braces and Other Nonsense
                 </a>
             </h2>
-            <div><p>Javascript is funky. Wrapping my head around nested functions feels a little nuts after learning a language like Ruby.
-Complicating it even more is the shift from ES5 to ES6, where ES5 always used the function keyword and ES6 includes fancy new arrow functions.</p></div>
+            <div><p>
+              <p>Javascript is funky. Wrapping my head around nested functions feels a little
+nuts after learning a language like Ruby.</p>
+<p>Complicating it even more is the shift from ES5 to ES6, where ES5 always used
+the <code>function</code> keyword and ES6 includes fancy new <code>arrow functions</code>.</p>
+<p>Big difference, besides less typing of the word &lsquo;function&rsquo;? Implicit return.
+Arrow functions, declared with a weird arrow rocket (<code>=&gt;</code>), can implicitly return
+their value when the function is called. This means writing a <code>return</code> statement
+is no longer necessary if your function contains only a single expression.</p>
+<p>But what does this look like in actual code? Take a look at this simple function
+to add together all the digits of a number and return a number:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">sum</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">integer</span>) {
+  <span style="color:#66d9ef">return</span> (
+    String(<span style="color:#a6e22e">integer</span>).<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#39;&#39;</span>).<span style="color:#a6e22e">reduce</span>(
+      <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">accumulator</span>, <span style="color:#a6e22e">value</span>) {
+        <span style="color:#66d9ef">return</span> Number(<span style="color:#a6e22e">accumulator</span>) <span style="color:#f92672">+</span> Number(<span style="color:#a6e22e">value</span>);
+      }
+    )
+  );
+};
+</code></pre></div><p>Code here is pretty straightforward: the variable <code>sum</code> is assigned to a
+function which converts the integer to a string, splits it into an array, and
+then calls the <code>reduce</code> method. The <code>reduce</code> method executes a function that
+converts the string digits to numbers and then returns a single reduced value,
+the sum of the digits.</p>
+<p>OK, so let&rsquo;s give this a shot using arrow functions.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sum</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">integer</span>) =&gt; {
+  <span style="color:#66d9ef">return</span> (
+    String(<span style="color:#a6e22e">integer</span>).<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#39;&#39;</span>).<span style="color:#a6e22e">reduce</span>(
+      (<span style="color:#a6e22e">accumulator</span>, <span style="color:#a6e22e">value</span>) =&gt; {
+        <span style="color:#66d9ef">return</span> Number(<span style="color:#a6e22e">accumulator</span>) <span style="color:#f92672">+</span> Number(<span style="color:#a6e22e">value</span>);
+      }
+    )
+  );
+};
+</code></pre></div><p>Looking good. We replaced the outdated and sometimes dangerous <code>var</code> with
+<code>const</code> and we took out the <code>function</code> declarations.</p>
+<p>But! We can also take out the implicit <code>return</code> statements because in the case
+of the function being executed for the <code>reduce</code> method and the function
+returning our sum, there is only one expression being returned.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sum</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">integer</span>) =&gt; {
+  (
+    String(<span style="color:#a6e22e">integer</span>).<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#39;&#39;</span>).<span style="color:#a6e22e">reduce</span>(
+      (<span style="color:#a6e22e">accumulator</span>, <span style="color:#a6e22e">value</span>) =&gt; {
+        Number(<span style="color:#a6e22e">accumulator</span>) <span style="color:#f92672">+</span> Number(<span style="color:#a6e22e">value</span>);
+      }
+    )
+  );
+};
+</code></pre></div><p>At this point though, our code simply returns <code>undefined</code>. Why is that?</p>
+<p>It&rsquo;s because if Javascript sees curly braces, it is expecting multiple
+expressions and thus needs an explicit <code>return</code> statement. Implicit return only
+works with no curly braces.</p>
+<p>So lets take them out!</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sum</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">integer</span>) =&gt; 
+  (
+    String(<span style="color:#a6e22e">integer</span>).<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#39;&#39;</span>).<span style="color:#a6e22e">reduce</span>(
+      (<span style="color:#a6e22e">accumulator</span>, <span style="color:#a6e22e">value</span>) =&gt; 
+        Number(<span style="color:#a6e22e">accumulator</span>) <span style="color:#f92672">+</span> Number(<span style="color:#a6e22e">value</span>);
+    )
+  );
+;
+</code></pre></div><p>That didn&rsquo;t work at all. If you try to run this code, you will get at least
+three syntax errors, complaining about missing/unexpected parentheses.</p>
+<p>Basically, Javascript is expecting an implicit return to all be on one line. The
+semicolons that are still in our code are suggesting some kind of multi-line
+thing going on. What if we take them all out, except for the one at the end?</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sum</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">integer</span>) =&gt; 
+  (
+    String(<span style="color:#a6e22e">integer</span>).<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#39;&#39;</span>).<span style="color:#a6e22e">reduce</span>(
+      (<span style="color:#a6e22e">accumulator</span>, <span style="color:#a6e22e">value</span>) =&gt; 
+        Number(<span style="color:#a6e22e">accumulator</span>) <span style="color:#f92672">+</span> Number(<span style="color:#a6e22e">value</span>)
+    )
+  )
+;
+</code></pre></div><p>Tada! Finally we have usable code again. Let&rsquo;s refactor just slightly by moving
+some stuff onto the same lines:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sum</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">integer</span>) =&gt; (
+  String(<span style="color:#a6e22e">integer</span>).<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#39;&#39;</span>).<span style="color:#a6e22e">reduce</span>((<span style="color:#a6e22e">accumulator</span>, <span style="color:#a6e22e">value</span>) =&gt; (
+    Number(<span style="color:#a6e22e">accumulator</span>) <span style="color:#f92672">+</span> Number(<span style="color:#a6e22e">value</span>)
+  ))
+);
+</code></pre></div><p>And that&rsquo;s looking much better. If we don&rsquo;t care about long lines of code, we
+can even make this an actual one-line expresion by taking out some of these
+parentheses&hellip;</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sum</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">integer</span>) =&gt; String(<span style="color:#a6e22e">integer</span>).<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#39;&#39;</span>).<span style="color:#a6e22e">reduce</span>((<span style="color:#a6e22e">accumulator</span>, <span style="color:#a6e22e">value</span>) =&gt; Number(<span style="color:#a6e22e">accumulator</span>) <span style="color:#f92672">+</span> Number(<span style="color:#a6e22e">value</span>));
+</code></pre></div><h3 id="recap">Recap</h3>
+<p>To recap:</p>
+<ul>
+<li>arrow functions can have an implicit return if you have a single expression in
+your function</li>
+<li>implicit returns <em>can not</em> use curly braces</li>
+<li>code inside parentheses is basically one line of code, and can&rsquo;t have
+semi-colons until the end</li>
+</ul>
+
+            </p></div>
             <div class="post-footer">
             <time>March 19, 2020</time>
 
@@ -170,7 +419,102 @@ Complicating it even more is the shift from ES5 to ES6, where ES5 always used th
                     Arch Install Notes
                 </a>
             </h2>
-            <div><p>Yesterday my Pop OS install got borked and instead of fixing it, since I&rsquo;m bored at home and self-quarantined anyway, decided to try installing Arch Linux.</p></div>
+            <div><p>
+              <p>Yesterday my Pop OS install got borked and instead of
+fixing it, since I&rsquo;m bored at home and self-quarantined anyway, decided to try
+installing Arch Linux. First time, and how hard could it be anyway?</p>
+<p>Got it done finally, and learned a lot along the way. Here are some notes to
+speed it up next time.</p>
+<ol>
+<li>
+<p>Boot into my Windows partition, download the Arch ISO, use Rufus to make a
+bootable drive, and boot into Arch.</p>
+</li>
+<li>
+<p>I decided to reuse the Linux partitions, so no new partitioning necessary.
+<code>fdisk -l</code> lists the drives.</p>
+<ul>
+<li><code>mkfs.fat -F32 /dev/sda5</code> to ready the EFI partition</li>
+<li><code>mkswap /dev/sda6</code> and <code>swapon /dev/sda6</code> to setup swap</li>
+<li><code>mkfs.ext4 /dev/sda7</code> to create filesystem</li>
+</ul>
+</li>
+<li>
+<p><code>wifi-menu</code> is a huge improvement over past methods for connecting to WPA2.
+After connection, use <code>dhcpcd wlan0</code> if IP isn&rsquo;t assigned automatically. Ping
+to check connection.</p>
+</li>
+<li>
+<p>Get fastest mirrors.</p>
+<ul>
+<li><code>pacman -Syy</code> to refresh the Pacman</li>
+<li><code>pacman -S reflector</code> to install Reflector</li>
+<li><code>reflector -c &quot;US&quot; -f 12 -l 10 -n 12 --save /etc/pacman.d/mirrorlist</code> for
+best mirror list</li>
+</ul>
+</li>
+<li>
+<p>Mount drive and install kernel</p>
+<ul>
+<li><code>mount /dev/sda7 /mnt</code> to mount</li>
+<li><code>pacstrap /mnt base linux linux-firmware vim</code> to install base packages and
+Vim</li>
+</ul>
+</li>
+<li>
+<p>Generate an fstab file: <code>genfstab -U /mnt &gt;&gt; /mnt/etc/fstab</code></p>
+</li>
+<li>
+<p>Access system as root: <code>arch-chroot /mnt</code></p>
+</li>
+<li>
+<p>Setup hostname <code>echo a1kn &gt; /etc/hostname</code> and then <code>vim /etc/hosts</code> to edit
+hosts file. Add:</p>
+<pre><code>127.0.0.1  localhost
+::1        localhost
+127.0.1.1  a1kn
+</code></pre></li>
+<li>
+<p>Use <code>passwd</code> to setup root password.</p>
+</li>
+<li>
+<p>Install bootloader. I&rsquo;m still using Grub because it&rsquo;s rock-solid and simple.</p>
+<ul>
+<li><code>pacman -S grub efibootmgr</code> to install</li>
+<li><code>mkdir /boot/efi</code> and <code>mount /dev/sda5 /boot/efi</code> to mount EFI partition</li>
+<li><code>grub-install --efi-directory=/boot/efi</code></li>
+<li><code>grub-mkconfig -o /boot/grub/grub.cfg</code></li>
+</ul>
+</li>
+<li>
+<p>Install Gnome <code>pacman -S gnome</code></p>
+<ul>
+<li><code>systemctl enable gdm.service</code></li>
+<li><code>systemctl enable NetworkManager.service</code></li>
+</ul>
+</li>
+<li>
+<p><code>reboot</code></p>
+</li>
+</ol>
+<p>Fun part is done! Now for the boring system config stuff. Some stuff
+to do (in a somewhat particular order):</p>
+<ul>
+<li>Add another user and login with that user instead of root</li>
+<li>Install <code>sudo</code> and add user to sudo</li>
+<li>Increase speed on Thinkpad nipple by adjusting mouse speed in settings</li>
+<li>Install <code>zsh</code> and switch default shell to it</li>
+<li>Clone <a href="https://github.com/a1kn/dotfiles">dotfiles</a> to home directory</li>
+<li>Install <code>node npm yarn ruby</code> to get some development stuff ready to go</li>
+<li>Install <code>ohmyzsh</code>, <code>tmux</code>, and <code>alacritty</code>. Open <code>vim</code> and type <code>:PlugInstall</code>
+to install plugins</li>
+<li>Install fonts</li>
+</ul>
+<p>And&hellip;we&rsquo;re out. Things are feeling pretty good and snappy and we&rsquo;ll have to
+keep installing packages over the next few days, but right now we should have a
+pretty usable environment.</p>
+
+            </p></div>
             <div class="post-footer">
             <time>March 15, 2020</time>
 

@@ -13,7 +13,12 @@
       <pubDate>Sun, 19 Apr 2020 17:04:40 -0400</pubDate>
       
       <guid>https://arthurkauffman.com/posts/js-oop-pseudo-classical-vs-oloo/</guid>
-      <description>Javascript&amp;rsquo;s prototypal inheritance is simple; so simple, in fact, that it seems at time overly-complicated. But at it&amp;rsquo;s heart, JS has only one construct &amp;ndash; objects.</description>
+      <description>Javascript&amp;rsquo;s prototypal inheritance is simple; so simple, in fact, that it seems at time overly-complicated. But at it&amp;rsquo;s heart, JS has only one construct &amp;ndash; objects. Objects can be linked with other objects in a prototype chain.
+The focus of this article is not to go into detail about the exact implementation of JS&amp;rsquo;s OOP. MDN&amp;rsquo;s stellar documentation, as always, provides in-depth and easily parsed documentation. If you&amp;rsquo;re trying to wrap your head around JS&amp;rsquo;s OOP implementation, start with MDN&amp;rsquo;s Object-oriented JavaScript for beginners and when you&amp;rsquo;re ready, make sure to read Inheritance and the prototype chain.
+I also won&amp;rsquo;t go into depth about all the ways in which JS OOP might be implemented in the wild. John Dugan does a stellar job of taking us through a myriad of approaches.
+Instead, I&amp;rsquo;m comparing two approaches that many agree are best-practice: the pseudo-classical model, and Kyle Simpson&amp;rsquo;s OLOO model. I&amp;rsquo;ll show examples of the classical model using more conventional code, and the updated 2015 syntax using class.
+First up, let&amp;rsquo;s look at the most common implementation of JS&amp;rsquo;s OOP, the so-called pseudo-classical model, which looks similar in syntax to many classical approaches to OOP, such as those found in Ruby, Python, and Java.
+Pseudo-Classical Example: function Animal(name) { this.name = name; } // constructor function is defined  function Dog(name) { Animal.call(this, name); } // a second constructor function is defined, utilizing `call` to call the // `Animal` function with `this` and `name` argument  Dog.prototype = Object.create(Animal.prototype); // `Dog` prototype is set to be a copy of `Animal` prototype  Dog.prototype.constructor = Dog; // fix the constructor, so that objects created from `Dog` will correctly show // `Dog` as the constructor  Dog.prototype.barks = function() { console.log(`${this.name}barks!`); } // Add a `bark` method to the `Dog` prototype  const sparky = new Dog(&amp;#39;Sparky&amp;#39;); sparky.bark(); Advantages:  constructor works and can be checked by calling sparky.constructor which will return Dog. clear to see what&amp;rsquo;s happening in the code: two constructor functions are declared, and then one&amp;rsquo;s prototype is set to the other&amp;rsquo;s, which sets up a link in the prototype chain  Disadvantages:  can be hard to read, especially if program gets larger could be argued that the implementation of constructor functions and then objects being created from those functions is needlessly complex  Example Using 2015&amp;rsquo;s Class Syntax: class Animal { constructor(name) { this.name = name; } } // constructor function defined  class Dog extends Animal { constructor(name) { super(name); } barks() { console.log(`${this.name}barks!`); } } // a second constructor function defined, using `super` to pass arguments to the first constructor function, and implementing the `bark` method const sparky = new Dog(&amp;#39;Sparky&amp;#39;); sparky.barks(); Advantages:  has all the functionality of the first example, including constructor and proper prototype chaining easy to read and write. Wowzers, no need to fiddle with prototypes or constructors! super replaces the need for call  Disadvantages:  un-JS-like syntax; under the hood, all the same prototype stuff is going on, but it feels very un-Javascript-ey new syntax, so not supported in IE 11 and earlier has the same problem with complexity as the first example, constructor functions need to be declared in order to instantiate objects  OLOO (Objects Linked to Other Objects) Example: const Animal = { init(name) { this.name = name; return this; }, }; // notice this is an object, and not a function // also notice the `init` method, which sets initial values  const Dog = Object.create(Animal); // creating an object from the first object, which establishes a link in the // prototype chain  Dog.bark = function() { console.log(`${this.name}barks!`); }; // add a method to the `Dog` object  const sparky = Object.create(Dog).init(&amp;#39;Sparky&amp;#39;); // creates a new object from `Dog` and passes in the name `Sparky`  sparky.bark(); Advantages:  no constructor functions necessary no need to worry about call greatly simplified code  Disadvantages:  can be hard to read/understand for someone coming from another language doesn&amp;rsquo;t care about constructor, so sparky.constructor actually returns Object  Summary  Javascript&amp;rsquo;s prototypal nature brings great flexibility into the way new objects are instantiated, which means that there are numerous approaches to JS OOP Pseudo-classical model uses constructor functions and the new keyword to instantiate new objects that are linked in the prototype chain OLOO uses Object.create to create new objects from other objects and largely does away with the classical idea of hierarchal inheritance  Recommendations  use OLOO as much as possible if you must use pseudo-classical, use class syntax if you don&amp;rsquo;t care about IE 11 browser support, which is less of a worry with every passing year otherwise, use pseudo-classical  </description>
     </item>
     
     <item>
@@ -22,7 +27,9 @@
       <pubDate>Sat, 28 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>https://arthurkauffman.com/about/</guid>
-      <description>Arthur Kauffman is a software engineer living and working in East Harlem. He is the co-creator of Campion, an open-source, edge deployable circuit-breaker middleware.</description>
+      <description>Arthur Kauffman is a software engineer living and working in East Harlem. He is the co-creator of Campion, an open-source, edge deployable circuit-breaker middleware.
+This site is generated by Hugo and its source is available on my Github.
+Get in touch by emailing my first name @sent.com.</description>
     </item>
     
     <item>
@@ -32,7 +39,22 @@
       
       <guid>https://arthurkauffman.com/posts/javascript-arrow-functions-parentheses-curly-braces/</guid>
       <description>Javascript is funky. Wrapping my head around nested functions feels a little nuts after learning a language like Ruby.
-Complicating it even more is the shift from ES5 to ES6, where ES5 always used the function keyword and ES6 includes fancy new arrow functions.</description>
+Complicating it even more is the shift from ES5 to ES6, where ES5 always used the function keyword and ES6 includes fancy new arrow functions.
+Big difference, besides less typing of the word &amp;lsquo;function&amp;rsquo;? Implicit return. Arrow functions, declared with a weird arrow rocket (=&amp;gt;), can implicitly return their value when the function is called. This means writing a return statement is no longer necessary if your function contains only a single expression.
+But what does this look like in actual code? Take a look at this simple function to add together all the digits of a number and return a number:
+var sum = function (integer) { return ( String(integer).split(&amp;#39;&amp;#39;).reduce( function (accumulator, value) { return Number(accumulator) + Number(value); } ) ); }; Code here is pretty straightforward: the variable sum is assigned to a function which converts the integer to a string, splits it into an array, and then calls the reduce method. The reduce method executes a function that converts the string digits to numbers and then returns a single reduced value, the sum of the digits.
+OK, so let&amp;rsquo;s give this a shot using arrow functions.
+const sum = (integer) =&amp;gt; { return ( String(integer).split(&amp;#39;&amp;#39;).reduce( (accumulator, value) =&amp;gt; { return Number(accumulator) + Number(value); } ) ); }; Looking good. We replaced the outdated and sometimes dangerous var with const and we took out the function declarations.
+But! We can also take out the implicit return statements because in the case of the function being executed for the reduce method and the function returning our sum, there is only one expression being returned.
+const sum = (integer) =&amp;gt; { ( String(integer).split(&amp;#39;&amp;#39;).reduce( (accumulator, value) =&amp;gt; { Number(accumulator) + Number(value); } ) ); }; At this point though, our code simply returns undefined. Why is that?
+It&amp;rsquo;s because if Javascript sees curly braces, it is expecting multiple expressions and thus needs an explicit return statement. Implicit return only works with no curly braces.
+So lets take them out!
+const sum = (integer) =&amp;gt; ( String(integer).split(&amp;#39;&amp;#39;).reduce( (accumulator, value) =&amp;gt; Number(accumulator) + Number(value); ) ); ; That didn&amp;rsquo;t work at all. If you try to run this code, you will get at least three syntax errors, complaining about missing/unexpected parentheses.
+Basically, Javascript is expecting an implicit return to all be on one line. The semicolons that are still in our code are suggesting some kind of multi-line thing going on. What if we take them all out, except for the one at the end?
+const sum = (integer) =&amp;gt; ( String(integer).split(&amp;#39;&amp;#39;).reduce( (accumulator, value) =&amp;gt; Number(accumulator) + Number(value) ) ) ; Tada! Finally we have usable code again. Let&amp;rsquo;s refactor just slightly by moving some stuff onto the same lines:
+const sum = (integer) =&amp;gt; ( String(integer).split(&amp;#39;&amp;#39;).reduce((accumulator, value) =&amp;gt; ( Number(accumulator) + Number(value) )) ); And that&amp;rsquo;s looking much better. If we don&amp;rsquo;t care about long lines of code, we can even make this an actual one-line expresion by taking out some of these parentheses&amp;hellip;
+const sum = (integer) =&amp;gt; String(integer).split(&amp;#39;&amp;#39;).reduce((accumulator, value) =&amp;gt; Number(accumulator) + Number(value)); Recap To recap:
+ arrow functions can have an implicit return if you have a single expression in your function implicit returns can not use curly braces code inside parentheses is basically one line of code, and can&amp;rsquo;t have semi-colons until the end  </description>
     </item>
     
     <item>
@@ -41,7 +63,22 @@ Complicating it even more is the shift from ES5 to ES6, where ES5 always used th
       <pubDate>Sun, 15 Mar 2020 11:59:00 -0400</pubDate>
       
       <guid>https://arthurkauffman.com/posts/arch-install-notes/</guid>
-      <description>Yesterday my Pop OS install got borked and instead of fixing it, since I&amp;rsquo;m bored at home and self-quarantined anyway, decided to try installing Arch Linux.</description>
+      <description>Yesterday my Pop OS install got borked and instead of fixing it, since I&amp;rsquo;m bored at home and self-quarantined anyway, decided to try installing Arch Linux. First time, and how hard could it be anyway?
+Got it done finally, and learned a lot along the way. Here are some notes to speed it up next time.
+  Boot into my Windows partition, download the Arch ISO, use Rufus to make a bootable drive, and boot into Arch.
+  I decided to reuse the Linux partitions, so no new partitioning necessary. fdisk -l lists the drives.
+ mkfs.fat -F32 /dev/sda5 to ready the EFI partition mkswap /dev/sda6 and swapon /dev/sda6 to setup swap mkfs.ext4 /dev/sda7 to create filesystem    wifi-menu is a huge improvement over past methods for connecting to WPA2. After connection, use dhcpcd wlan0 if IP isn&amp;rsquo;t assigned automatically. Ping to check connection.
+  Get fastest mirrors.
+ pacman -Syy to refresh the Pacman pacman -S reflector to install Reflector reflector -c &amp;quot;US&amp;quot; -f 12 -l 10 -n 12 --save /etc/pacman.d/mirrorlist for best mirror list    Mount drive and install kernel
+ mount /dev/sda7 /mnt to mount pacstrap /mnt base linux linux-firmware vim to install base packages and Vim    Generate an fstab file: genfstab -U /mnt &amp;gt;&amp;gt; /mnt/etc/fstab
+  Access system as root: arch-chroot /mnt
+  Setup hostname echo a1kn &amp;gt; /etc/hostname and then vim /etc/hosts to edit hosts file. Add:
+127.0.0.1 localhost ::1 localhost 127.0.1.1 a1kn   Use passwd to setup root password.
+  Install bootloader. I&amp;rsquo;m still using Grub because it&amp;rsquo;s rock-solid and simple.
+ pacman -S grub efibootmgr to install mkdir /boot/efi and mount /dev/sda5 /boot/efi to mount EFI partition grub-install --efi-directory=/boot/efi grub-mkconfig -o /boot/grub/grub.cfg    Install Gnome pacman -S gnome
+ systemctl enable gdm.service systemctl enable NetworkManager.service    reboot
+  Fun part is done! Now for the boring system config stuff. Some stuff to do (in a somewhat particular order):
+ Add another user and login with that user instead of root Install sudo and add user to sudo Increase speed on Thinkpad nipple by adjusting mouse speed in settings Install zsh and switch default shell to it Clone dotfiles to home directory Install node npm yarn ruby to get some development stuff ready to go Install ohmyzsh, tmux, and alacritty. Open vim and type :PlugInstall to install plugins Install fonts  And&amp;hellip;we&amp;rsquo;re out. Things are feeling pretty good and snappy and we&amp;rsquo;ll have to keep installing packages over the next few days, but right now we should have a pretty usable environment.</description>
     </item>
     
     <item>
