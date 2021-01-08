@@ -10,9 +10,8 @@ summaryLength = 20
   name = "Arthur Kauffman"
 
 [params]
-  description = "Take issue with pants"
+  description = "Software Engineer in NYC"
   github = "https://github.com/a1kn"
-  wordpress = "https://arthurlyle.com/"
 
 [[menu.main]]
   identifier = "about"
